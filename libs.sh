@@ -1,4 +1,4 @@
 #!/bin/bash
 
-web_frameworks=("default" "beego")
+web_frameworks=("default" "beego" "echo")
 

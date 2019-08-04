@@ -1,5 +1,5 @@
 #!/bin/bash
-
+go build -o gowebbenchmark
 server_bin_name="gowebbenchmark"
 
 . ./libs.sh
@@ -16,12 +16,13 @@ fi
 
 test_web_framework()
 {
-  echo "testing web framework: $2 $3"
+  echo "testing web framework: $2"
   ./$server_bin_name $2 $3 &
   sleep 2
 
   throughput=`wrk -t$cpu_cores -c$4 -d30s http://127.0.0.1:8080/hello | grep Requests/sec | awk '{print $2}'`
   echo "throughput: $throughput requests/second"
+  echo "cpu_cores: $cpu_cores"
   test_result[$1]=$throughput
 
   pkill -9 $server_bin_name
@@ -48,7 +49,7 @@ test_all()
 pkill -9 $server_bin_name
 
 echo ","$(IFS=$','; echo "${web_frameworks[*]}" ) > processtime.csv
-test_all 0 5000
+test_all 0 1000
 echo "0 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
 
 

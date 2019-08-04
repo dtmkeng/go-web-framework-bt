@@ -10,6 +10,7 @@ import (
 
 	"github.com/astaxie/beego"
 	co "github.com/astaxie/beego/context"
+	"github.com/labstack/echo"
 )
 
 var port = 8080
@@ -49,16 +50,18 @@ func main() {
 		var mem runtime.MemStats
 		runtime.ReadMemStats(&mem)
 		var u uint64 = 1024 * 1024
-		fmt.Printf("TotalAlloc: %d\n", mem.TotalAlloc/u)
-		fmt.Printf("Alloc: %d\n", mem.Alloc/u)
-		fmt.Printf("HeapAlloc: %d\n", mem.HeapAlloc/u)
-		fmt.Printf("HeapSys: %d\n", mem.HeapSys/u)
+		fmt.Printf("TotalAlloc: %d\n", mem.TotalAlloc/u) // ไบต์สูงสุดสะสมที่จัดสรรบนฮีป (จะไม่ลดลง)
+		fmt.Printf("Alloc: %d\n", mem.Alloc/u)           // จำนวนไบต์ที่จัดสรรในปัจจุบันบนฮีป
+		fmt.Printf("HeapAlloc: %d\n", mem.HeapAlloc/u)   // จำนวนไบต์ที่จัดสรรในปัจจุบันบนฮีป
+		fmt.Printf("HeapSys: %d\n", mem.HeapSys/u)       // หน่วยความจำทั้งหมดที่ได้รับจากระบบปฏิบัติการ
 	}()
 	switch webFramework {
-	case "default":
+	case "default": //
 		startDefaultMux()
-	case "beego":
+	case "beego": // beego
 		startBeego()
+	case "echo": // echo
+		startEcho()
 	}
 
 }
@@ -100,4 +103,14 @@ func startBeego() {
 	mux := beego.NewControllerRegister()
 	mux.Get("/hello", beegoHandler)
 	http.ListenAndServe(":"+strconv.Itoa(port), mux)
+}
+
+// echo
+func echoHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, echo")
+}
+func startEcho() {
+	e := echo.New()
+	e.GET("/hello", echoHandler)
+	e.Logger.Fatal(e.Start(":" + strconv.Itoa(port)))
 }
