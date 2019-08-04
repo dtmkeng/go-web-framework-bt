@@ -4,5 +4,7 @@ go 1.12
 
 require (
 	github.com/astaxie/beego v1.12.0
+	github.com/labstack/echo v3.3.10+incompatible
+	github.com/labstack/gommon v0.2.9 // indirect
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 )
