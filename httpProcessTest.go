@@ -15,8 +15,15 @@ import (
 	"github.com/astaxie/beego"
 	co "github.com/astaxie/beego/context"
 	"github.com/gin-gonic/gin"
+	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/buffalo/render"
+	"github.com/gobuffalo/envy"
+	contenttype "github.com/gobuffalo/mw-contenttype"
+	paramlogger "github.com/gobuffalo/mw-paramlogger"
+	"github.com/gobuffalo/x/sessions"
 	"github.com/gorilla/mux"
 	"github.com/labstack/echo"
+	"github.com/rs/cors"
 )
 
 var port = 8081
@@ -78,6 +85,8 @@ func main() {
 		startMux()
 	case "go-rest":
 		startGoRest()
+	case "buffalo":
+		startBuffalo()
 	}
 
 }
@@ -191,4 +200,31 @@ func startGoRest() {
 	}
 	api.SetApp(router)
 	http.ListenAndServe(":"+strconv.Itoa(port), api.MakeHandler())
+}
+
+// buffalo
+var r *render.Engine
+
+// ENV ...
+var ENV = envy.Get("GO_ENV", "development")
+
+func buffaloHandler(c buffalo.Context) error {
+	return c.Render(200, r.JSON(map[string]string{"message": "Welcome to Buffalo!"}))
+}
+func startBuffalo() {
+	app := buffalo.New(buffalo.Options{
+		Env:          ENV,
+		SessionStore: sessions.Null{},
+		PreWares: []buffalo.PreWare{
+			cors.Default().Handler,
+		},
+		SessionName: "_coke_session",
+		Addr:        ":" + strconv.Itoa(port),
+	})
+	app.Use(paramlogger.ParameterLogger)
+	app.Use(contenttype.Set("application/json"))
+
+	app.GET("/hello", buffaloHandler)
+	// app.Options.Addr := 8080
+	app.Serve()
 }
