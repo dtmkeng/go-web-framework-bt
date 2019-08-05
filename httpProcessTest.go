@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"runtime"
@@ -9,9 +10,12 @@ import (
 	"time"
 
 	"github.com/aerogo/aero"
+	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/aofei/air"
 	"github.com/astaxie/beego"
 	co "github.com/astaxie/beego/context"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 	"github.com/labstack/echo"
 )
 
@@ -68,6 +72,12 @@ func main() {
 		startAero()
 	case "air":
 		startAir()
+	case "gin":
+		startGin()
+	case "gorilamux":
+		startMux()
+	case "go-rest":
+		startGoRest()
 	}
 
 }
@@ -141,4 +151,44 @@ func startAir() {
 	a.Address = ":" + strconv.Itoa(port)
 	a.GET("/hello", airHandler)
 	a.Serve()
+}
+
+// Gin
+func ginHandler(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": "Hello, 世界",
+	})
+}
+func startGin() {
+	gin.DisableConsoleColor()
+	r := gin.Default()
+	r.GET("/hello", ginHandler)
+	r.Run(":" + strconv.Itoa(port))
+}
+
+// mux
+func muxHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello World")
+}
+func startMux() {
+	r := mux.NewRouter()
+	r.HandleFunc("/hello", muxHandler)
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(port), r))
+}
+
+// go-rest-api
+func goRestHandler(w rest.ResponseWriter, req *rest.Request) {
+	w.WriteJson(map[string]string{"Body": "Hello World!"})
+}
+func startGoRest() {
+	api := rest.NewApi()
+	api.Use(rest.DefaultDevStack...)
+	router, err := rest.MakeRouter(
+		rest.Get("/hello", goRestHandler),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	api.SetApp(router)
+	http.ListenAndServe(":"+strconv.Itoa(port), api.MakeHandler())
 }

@@ -49,7 +49,7 @@ test_all()
 pkill -9 $server_bin_name
 
 echo ","$(IFS=$','; echo "${web_frameworks[*]}" ) > processtime.csv
-test_all 0 1000
+test_all 0 100
 echo "0 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
 
 
