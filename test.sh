@@ -54,5 +54,8 @@ echo ","$(IFS=$','; echo "${web_frameworks[*]}" ) > processtime.csv
 test_all 0 100
 echo "0 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
 echo "0 ms,"$(IFS=$','; echo "${test_alloc_result[*]}" ) >> processtime_alloc.csv
+test_all 10 100
+echo "10 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
+echo "10 ms,"$(IFS=$','; echo "${test_alloc_result[*]}" ) >> processtime_alloc.csv
 
 
