@@ -132,6 +132,16 @@ func startBeego() {
 
 // echo
 func echoHandler(c echo.Context) error {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	return c.String(http.StatusOK, "Hello, echo")
 }
 func startEcho() {
@@ -142,6 +152,16 @@ func startEcho() {
 
 // aero
 func aeroHandler(ctx aero.Context) error {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	return ctx.String("Hello World")
 }
 func startAero() {
@@ -153,6 +173,16 @@ func startAero() {
 
 // air
 func airHandler(req *air.Request, res *air.Response) error {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	return res.WriteString("Hello, 世界")
 }
 func startAir() {
@@ -164,6 +194,16 @@ func startAir() {
 
 // Gin
 func ginHandler(c *gin.Context) {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	c.JSON(200, gin.H{
 		"message": "Hello, 世界",
 	})
@@ -177,6 +217,16 @@ func startGin() {
 
 // mux
 func muxHandler(w http.ResponseWriter, r *http.Request) {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	fmt.Fprintf(w, "Hello World")
 }
 func startMux() {
@@ -187,6 +237,16 @@ func startMux() {
 
 // go-rest-api
 func goRestHandler(w rest.ResponseWriter, req *rest.Request) {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	w.WriteJson(map[string]string{"Body": "Hello World!"})
 }
 func startGoRest() {
@@ -209,6 +269,16 @@ var r *render.Engine
 var ENV = envy.Get("GO_ENV", "development")
 
 func buffaloHandler(c buffalo.Context) error {
+	if cpuBound {
+		pow(target)
+	} else {
+
+		if sleepTime > 0 {
+			time.Sleep(sleepTimeDuration)
+		} else {
+			runtime.Gosched()
+		}
+	}
 	return c.Render(200, r.JSON(map[string]string{"message": "Welcome to Buffalo!"}))
 }
 func startBuffalo() {
