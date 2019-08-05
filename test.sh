@@ -20,7 +20,7 @@ test_web_framework()
   ./$server_bin_name $2 $3  > alloc.log 2>&1 &
   sleep 2
 
-  throughput=`wrk -t$cpu_cores -c$4 -d30s http://127.0.0.1:8081/hello | grep Requests/sec | awk '{print $2}'`
+  throughput=`wrk -t4 -c$4 -d30s http://127.0.0.1:8081/hello | grep Requests/sec | awk '{print $2}'`
   alloc=`cat alloc.log|grep HeapAlloc | awk '{print $2}'`
   echo "throughput: $throughput requests/second"
   echo "cpu_cores: $cpu_cores"
@@ -57,5 +57,11 @@ echo "0 ms,"$(IFS=$','; echo "${test_alloc_result[*]}" ) >> processtime_alloc.cs
 test_all 10 100
 echo "10 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
 echo "10 ms,"$(IFS=$','; echo "${test_alloc_result[*]}" ) >> processtime_alloc.csv
+test_all 100 100
+echo "100 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
+echo "100 ms,"$(IFS=$','; echo "${test_alloc_result[*]}" ) >> processtime_alloc.csv
+test_all 500 100
+echo "500 ms,"$(IFS=$','; echo "${test_result[*]}" ) >> processtime.csv
+echo "500 ms,"$(IFS=$','; echo "${test_alloc_result[*]}" ) >> processtime_alloc.csv
 
 
